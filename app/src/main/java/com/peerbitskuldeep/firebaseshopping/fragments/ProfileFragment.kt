@@ -1,6 +1,5 @@
 package com.peerbitskuldeep.firebaseshopping.fragments
 
-import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
@@ -54,7 +53,55 @@ class ProfileFragment : Fragment() {
 
         view.tvEdtProfile.setOnClickListener {
 
-            startActivity(Intent(context, EditProfile::class.java))
+//            startActivity(Intent(context, EditProfile::class.java))
+
+            val getBtnText = view.tvEdtProfile.text.toString()
+
+            when{
+
+                getBtnText == "Edit Profile" ->  startActivity(Intent(context, EditProfile::class.java))
+
+                getBtnText == "Follow" -> {
+
+                    firebaseUser?.uid.let { it1 ->
+
+                        FirebaseDatabase.getInstance().reference
+                            .child("Follow").child(it1.toString())
+                            .child("Following").child(profileId)
+                            .setValue(true)
+                    }
+
+                    firebaseUser?.uid.let { it1 ->
+
+                        FirebaseDatabase.getInstance().reference
+                            .child("Follow").child(profileId)
+                            .child("Followers").child(it1.toString())
+                            .setValue(true)
+                    }
+
+                }
+
+                getBtnText == "Following" -> {
+
+                    firebaseUser?.uid.let { it1 ->
+
+                        FirebaseDatabase.getInstance().reference
+                            .child("Follow").child(it1.toString())
+                            .child("Following").child(profileId)
+                            .removeValue()
+                    }
+
+                    firebaseUser?.uid.let { it1 ->
+
+                        FirebaseDatabase.getInstance().reference
+                            .child("Follow").child(profileId)
+                            .child("Followers").child(it1.toString())
+                            .removeValue()
+                    }
+
+                }
+
+            }
 
         }
 
@@ -77,7 +124,6 @@ class ProfileFragment : Fragment() {
         if (followingRef != null)
         {
             followingRef.addValueEventListener(object : ValueEventListener {
-                @SuppressLint("SetTextI18n")
                 override fun onDataChange(snapshot: DataSnapshot) {
 
                     if (snapshot.child(profileId).exists())

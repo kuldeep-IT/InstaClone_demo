@@ -175,8 +175,11 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/tvEdtProfile"
                 android:text="Edit Profile"
+                android:background="@drawable/btn_background"
                 android:textSize="24sp"
+                android:textStyle="bold"
                 android:layout_marginLeft="40dp"
+                android:layout_marginRight="5dp"
                 android:gravity="center"
                 />
 
